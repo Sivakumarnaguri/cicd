@@ -7,12 +7,6 @@ pipeline {
   }
 
   stages {
-    stage('Clean Workspace') {
-      steps {
-        deleteDir()
-      }
-    }
-
     stage('Checkout') {
       steps {
         git branch: 'main', url: 'https://github.com/Sivakumarnaguri/cicd.git'
@@ -69,10 +63,8 @@ pipeline {
           sh '''
             git config user.email "sivakumarnaguri@gmail.com"
             git config user.name "Sivakumar-Naguri"
-
             sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
             git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-
             git commit -m "Update deployment image to version ${BUILD_NUMBER}" || echo "No changes to commit"
             git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
           '''
