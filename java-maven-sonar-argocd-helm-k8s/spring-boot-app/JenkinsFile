@@ -46,14 +46,14 @@ pipeline {
       }
     }
     stage('Update Deployment File') {
-        environment {
-            GIT_REPO_NAME = "cicd"
-            GIT_USER_NAME = "Sivakumarnaguri"
-        }
-        steps {
+    environment {
+        GIT_REPO_NAME = "cicd"
+        GIT_USER_NAME = "Sivakumarnaguri"
+    }
+    steps {
+        dir('java-maven-sonar-argocd-helm-k8s') { // <== this ensures we are in the correct repo folder
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                 sh '''
-                    cd "$WORKSPACE/java-maven-sonar-argocd-helm-k8s"
                     git config user.email "sivakumarnaguri@gmail.com"
                     git config user.name "Sivakumar-Naguri"
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
@@ -64,5 +64,4 @@ pipeline {
             }
         }
     }
-  }
 }
